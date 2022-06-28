@@ -79,7 +79,7 @@ public class Snake : MonoBehaviour
             direction = Direction.right;
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    private void OnTriggerEnter(Collider col)
     {
         if (col.CompareTag("Block"))
         {
@@ -93,12 +93,12 @@ public class Snake : MonoBehaviour
             Destroy(col.gameObject);
             Fruit();
             ScoreManager.instance.AddPoint();
-            
+
         }
 
         void Fruit()
         {
-            Vector2 Position = new Vector2(Random.Range(Leftside.transform.position.x, Rightside.transform.position.x), Random.Range(Topside.transform.position.y, Bottomside.transform.position.y));
+            Vector3 Position = new Vector3(Random.Range(-8.5f, 8.5f), Random.Range(4f, -3.4f));
 
             Instantiate(FruitPrefab, Position, Quaternion.identity);
         }
