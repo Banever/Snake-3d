@@ -13,7 +13,6 @@ public class Snake : MonoBehaviour
     }
 
     Direction direction;
-
     public List<Transform> Tail = new List<Transform>();
     public GameObject FruitPrefab;
     public GameObject Leftside;
@@ -38,16 +37,17 @@ public class Snake : MonoBehaviour
 
     private void Move()
     {
+
         Lastposition = transform.position;
 
         Vector3 nextPosition = Vector3.zero;
         if (direction == Direction.up)
             nextPosition = Vector3.up;
-        else if (direction == Direction.down)
+        if (direction == Direction.down)
             nextPosition = Vector3.down;
-        else if (direction == Direction.left)
+        if (direction == Direction.left)
             nextPosition = Vector3.left;
-        else if (direction == Direction.right)
+        if (direction == Direction.right)
             nextPosition = Vector3.right;
         nextPosition *= step;
         transform.position += nextPosition;
@@ -70,37 +70,48 @@ public class Snake : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
-            direction = Direction.up;
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-            direction = Direction.down;
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            direction = Direction.left;
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-            direction = Direction.right;
-    }
-
-    private void OnTriggerEnter(Collider col)
-    {
-        if (col.CompareTag("Block"))
         {
-            print("Game Over");
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Game over");
+            if (direction != Direction.down)
+                direction = Direction.up;
         }
-
-        else if (col.CompareTag("Fruit"))
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Tail.Add(Instantiate(TailPrefab, Tail[Tail.Count - 1].position, Quaternion.identity).transform);
-            Destroy(col.gameObject);
-            Fruit();
-            ScoreManager.instance.AddPoint();
-
+            if (direction != Direction.up)
+                direction = Direction.down;
         }
-
-        void Fruit()
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Vector3 Position = new Vector3(Random.Range(-8.5f, 8.5f), Random.Range(4f, -3.4f));
-
-            Instantiate(FruitPrefab, Position, Quaternion.identity);
+            if (direction != Direction.right)
+                direction = Direction.left;
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (direction != Direction.left)
+                direction = Direction.right;
         }
     }
-}
+        private void OntriggerEnter(Collider col)
+        {
+            if (col.CompareTag("Block"))
+            {
+                print("Game Over");
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Game over");
+            }
+
+            else if (col.CompareTag("Fruit"))
+            {
+                Tail.Add(Instantiate(TailPrefab, Tail[Tail.Count - 1].position, Quaternion.identity).transform);
+                Destroy(col.gameObject);
+                Fruit();
+                ScoreManager.instance.AddPoint();
+
+            }
+
+            void Fruit()
+            {
+                Vector3 Position = new Vector3(Random.Range(-8.5f, 8.5f), Random.Range(4f, -3.4f));
+
+                Instantiate(FruitPrefab, Position, Quaternion.identity);
+            }
+        }
+    }
