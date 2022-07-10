@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Snake : MonoBehaviour
-{
+{ 
+    
     enum Direction
     {
+        forward,
+        back,
         up,
         down,
         left,
         right
     }
+ 
+
 
     Direction direction;
 
@@ -25,23 +30,23 @@ public class Snake : MonoBehaviour
     // Declare the framerate
     public float step = 1.6f;
     // Distance traveler in x time
-
     public GameObject TailPrefab;
-
-
-
+    
     void Start()
     {
         InvokeRepeating("Move", framerate, framerate);
-        // We want to repeat the methot at the same time and repetitions as framerate
+        // We want to repeat the method at the same time and repetitions as framerate
     }
-
     private void Move()
     {
         Lastposition = transform.position;
 
         Vector3 nextPosition = Vector3.zero;
-        if (direction == Direction.up)
+        if (direction == Direction.forward)
+            nextPosition = Vector3.forward;
+        else if (direction == Direction.back)
+            nextPosition = Vector3.back;
+        else if (direction == Direction.up)
             nextPosition = Vector3.up;
         else if (direction == Direction.down)
             nextPosition = Vector3.down;
@@ -54,8 +59,9 @@ public class Snake : MonoBehaviour
 
         Tailmovement();
     }
-
     Vector3 Lastposition;
+    private Vector3 rotationAngle;
+
     private void Tailmovement()
     {
         for (int i = 0; i < Tail.Count; i++)
@@ -69,9 +75,15 @@ public class Snake : MonoBehaviour
 
     void Update()
     {
+
+
         if (Input.GetKeyDown(KeyCode.UpArrow))
+            direction = Direction.forward;
+         else if (Input.GetKeyDown(KeyCode.DownArrow))
+            direction = Direction.back;
+        else if (Input.GetKeyDown(KeyCode.W))
             direction = Direction.up;
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.S))
             direction = Direction.down;
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
             direction = Direction.left;
